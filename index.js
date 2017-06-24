@@ -34,7 +34,7 @@ process.on('SIGINT', function() {
 const DEMOZONE = 'MADRID'
     , IMAGES = 'images'
     , UPLOADFOLDER = path.join(__dirname, IMAGES)
-    , PORT = 9999
+    , PORT = 7123
 ;
 
 const app    = express()
