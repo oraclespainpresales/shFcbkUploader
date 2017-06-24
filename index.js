@@ -47,7 +47,7 @@ const URI = '/'
     , UPLOAD = '/upload'
     , SELFIEUPLOAD = '/selfieupload'
     , IDUPLOAD = '/IDupload'
-    , DELETE = '/images'
+    , DELETE = '/images/:demozone'
     , LOGO = 'https://documents-gse00011668.documents.us2.oraclecloud.com/documents/link/web?IdcService=GET_FILE&dLinkID=LF74603357B68766C445D9DA1589C7A5FB5CB4FE98AE&item=fFileGUID:DD18A696F0F98758F302695F1589C7A5FB5CB4FE98AE';
 ;
 
@@ -60,6 +60,11 @@ const soaClient = restify.createJSONClient({
 });
 const UPSERTIDENTITYURI = '/SH_APEX_Helper/UpsertIdentityService/customer/identity';
 
+const dbClient = restify.createClient({
+  url: 'https://new.apex.digitalpracticespain.com',
+  rejectUnauthorized: false
+});
+const DELETEIDENTITIESURI = '/ords/pdb1/smarthospitality/customers/identities/';
 
 const SELF = 'http://new.proxy.digitalpracticespain.com:' + PORT + '/' + IMAGES + '/';
 
@@ -72,7 +77,7 @@ var images = [];
 function processFile(prefix, user, corrId, files) {
   return new Promise((resolve, reject) => {
     var oldpath = files.filetoupload.path;
-    var newfile = prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
+    var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
     var newpath = UPLOADFOLDER + '/'+ newfile;
     log.verbose("", "Uploaded file %s", newpath);
     fs.rename(oldpath, newpath, (err) => {
@@ -124,13 +129,22 @@ function registerPictures() {
 }
 
 function deleteFiles(req, res) {
-  var filesToDelete = glob.sync(UPLOADFOLDER + '/*');
+  var _demozone = req.params.demozone;
+  var filesToDelete = glob.sync(UPLOADFOLDER + '/' + _demozone + '-*');
   log.verbose("About to delete all files under " + UPLOADFOLDER);
   console.log(filesToDelete);
   filesToDelete.forEach((f) => {
     fs.unlinkSync(f);
   });
-  res.status(202).send();
+  dbClient.del(DELETEIDENTITIESURI + DEMOZONE, (err, req, res) => {
+    if (err) {
+      log.error("","Error from DB call: " + err.statusCode);
+      res.status(err.statusCode).send();
+      return;
+    }
+    log.verbose("Identities removed: " + res.statusCode);
+    res.status(202).send();
+  });
 }
 
 router.get(UPLOAD, (req, res) => {
