@@ -10,6 +10,7 @@ var restify = require('restify')
   , http = require('http')
   , https = require('https')
   , util = require('util')
+  , glob = require('glob')
   , log = require('npmlog-ts')
 ;
 
@@ -46,6 +47,7 @@ const URI = '/'
     , UPLOAD = '/upload'
     , SELFIEUPLOAD = '/selfieupload'
     , IDUPLOAD = '/IDupload'
+    , DELETE = '/images'
     , LOGO = 'https://documents-gse00011668.documents.us2.oraclecloud.com/documents/link/web?IdcService=GET_FILE&dLinkID=LF74603357B68766C445D9DA1589C7A5FB5CB4FE98AE&item=fFileGUID:DD18A696F0F98758F302695F1589C7A5FB5CB4FE98AE';
 ;
 
@@ -121,6 +123,16 @@ function registerPictures() {
   });
 }
 
+function deleteFiles(req, res) {
+  var filesToDelete = glob.sync(UPLOADFOLDER + '/*');
+  log.verbose("About to delete all files under " + UPLOADFOLDER);
+  console.log(filesToDelete);
+  filesToDelete.forEach((f) => {
+    fs.unlinkSync(f);
+  });
+  res.status(202).send();
+}
+
 router.get(UPLOAD, (req, res) => {
   var url_parts = url.parse(req.url, true);
   var query = url_parts.query;
@@ -132,6 +144,7 @@ router.get(UPLOAD, (req, res) => {
 
 router.post(SELFIEUPLOAD, (req, res) => uploadFile(HTMLASKID, SELFIE, req, res));
 router.post(IDUPLOAD, (req, res) => uploadFile(HTMLDONE, ID, req, res, registerPictures));
+router.delete(DELETE, (req, res) => deleteFiles(req, res));
 
 app.use(URI, router);
 app.use(URI + IMAGES, express.static(IMAGES));

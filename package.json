@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.15.3",
     "formidable": "^1.1.1",
+    "glob": "^7.1.2",
     "npmlog-ts": "0.0.1",
     "restify": "^4.3.0",
     "url": "^0.11.0"
