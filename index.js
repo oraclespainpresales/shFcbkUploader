@@ -141,7 +141,7 @@ function deleteFiles(req, res) {
       res.status(_err.statusCode).send();
       return;
     }
-    log.verbose("Identities removed: " + _res.statusCode);
+    log.verbose("Identities removed");
     res.status(202).send();
   });
 }
