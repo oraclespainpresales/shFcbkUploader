@@ -1,0 +1,26 @@
+{
+  "name": "shfcbkuploader",
+  "version": "1.0.0",
+  "description": "Smart Hospitality: Helper to provide a way to Upload an image from IBCS/FCBK channel until we do support that",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oraclespainpresales/shFcbkUploader.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oraclespainpresales/shFcbkUploader/issues"
+  },
+  "homepage": "https://github.com/oraclespainpresales/shFcbkUploader#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "formidable": "^1.1.1",
+    "npmlog-ts": "0.0.1",
+    "restify": "^4.3.0",
+    "url": "^0.11.0"
+  }
+}
