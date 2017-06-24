@@ -132,7 +132,6 @@ function deleteFiles(req, res) {
   var _demozone = req.params.demozone;
   var filesToDelete = glob.sync(UPLOADFOLDER + '/' + _demozone + '-*');
   log.verbose("About to delete all files under " + UPLOADFOLDER);
-  console.log(filesToDelete);
   filesToDelete.forEach((f) => {
     fs.unlinkSync(f);
   });
