@@ -135,13 +135,13 @@ function deleteFiles(req, res) {
   filesToDelete.forEach((f) => {
     fs.unlinkSync(f);
   });
-  dbClient.del(DELETEIDENTITIESURI + DEMOZONE, (err, req, res) => {
-    if (err) {
-      log.error("","Error from DB call: " + err.statusCode);
-      res.status(err.statusCode).send();
+  dbClient.del(DELETEIDENTITIESURI + DEMOZONE, (_err, _req, _res) => {
+    if (_err) {
+      log.error("","Error from DB call: " + _err.statusCode);
+      res.status(_err.statusCode).send();
       return;
     }
-    log.verbose("Identities removed: " + res.statusCode);
+    log.verbose("Identities removed: " + _res.statusCode);
     res.status(202).send();
   });
 }
