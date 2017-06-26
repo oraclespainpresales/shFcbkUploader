@@ -32,8 +32,7 @@ process.on('SIGINT', function() {
 });
 // Main handlers registration - END
 
-const DEMOZONE = 'MADRID'
-    , IMAGES = 'images'
+const IMAGES = 'images'
     , UPLOADFOLDER = path.join(__dirname, IMAGES)
     , PORT = 7123
 ;
@@ -75,6 +74,7 @@ const HTMLDONE='<title>WEDO Hotels</title><meta name="viewport" content="width=d
 
 var images = [];
 var corrId = 0;
+var DEMOZONE = '';
 
 function processFile(prefix, user, files) {
   return new Promise((resolve, reject) => {
@@ -167,6 +167,7 @@ router.get(UPLOAD, (req, res) => {
   var query = url_parts.query;
   var corrId = query.corrId;
   var user = query.user;
+  DEMOZONE = query.demozone.toUpperCase();
   images = [];
   res.status(200).send(util.format(HTMLASKSELFIE, user, corrId));
 });
