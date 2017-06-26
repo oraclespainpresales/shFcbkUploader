@@ -59,6 +59,7 @@ const soaClient = restify.createJSONClient({
   url: 'http://new.soa.digitalpracticespain.com'
 });
 const UPSERTIDENTITYURI = '/SH_APEX_Helper/UpsertIdentityService/customer/identity';
+const SOASENDPICTURES = '/soa-infra/resources/default/BOT_Helper!1.0/PreCheckingProcessService/smarthospitality/prechecking/sendpictures';
 
 const dbClient = restify.createClient({
   url: 'https://new.apex.digitalpracticespain.com',
@@ -73,8 +74,9 @@ const HTMLASKID='<title>WEDO Hotels</title><meta name="viewport" content="width=
 const HTMLDONE='<title>WEDO Hotels</title><meta name="viewport" content="width=device-width"><style>.bootstrap-frm{margin-left:auto; margin-right:auto; max-width: 500px; background: #FFF; padding: 20px 30px 20px 30px; font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif; color: #888; text-shadow: 1px 1px 1px #FFF; border:1px solid #DDD; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;}.bootstrap-frm h1{font: 25px "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 0px 0px 10px 40px; display: block; border-bottom: 1px solid #DADADA; margin: -10px -30px 30px -30px; color: #888;}.bootstrap-frm h1>span{display: block; font-size: 11px;}.bootstrap-frm input[type="file"]{top: 150px; width: 250px; padding: 10px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border: 1px dashed #BBB; text-align: center; background-color: #DDD; cursor:pointer;}}.bootstrap-frm input[type="submit"]{background: #FFF; border: 1px solid #CCC; padding: 10px 25px 10px 25px; color: #333; border-radius: 4px;}.bootstrap-frm .button:hover{color: #333; background-color: #EBEBEB; border-color: #ADADAD;}</style><form class="bootstrap-frm"><h1><center><img src="' + LOGO + '" width="60px"> Hotels</center></h1><h3><center>This a secure connection</center></h3><center><h2>Files uploaded sucessfully</h2></center><center>You can <a href="https://www.messenger.com/closeWindow/?image_url=' + LOGO + '&display_text=Closing Window">close</a> this page</center></form><!--%s %s-->';
 
 var images = [];
+var corrId = 0;
 
-function processFile(prefix, user, corrId, files) {
+function processFile(prefix, user, files) {
   return new Promise((resolve, reject) => {
     var oldpath = files.filetoupload.path;
     var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
@@ -94,8 +96,8 @@ function uploadFile(TEMPLATE, prefix, req, res, callback) {
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
     var user = fields.user;
-    var corrId = fields.corrId;
-    processFile(prefix, user, corrId, files)
+    corrId = fields.corrId;
+    processFile(prefix, user, files)
     .then((file) => {
       images.push({ user: user, type: prefix, file: SELF + file});
       res.status(200).send(util.format(TEMPLATE, user, corrId));
@@ -111,6 +113,7 @@ function uploadFile(TEMPLATE, prefix, req, res, callback) {
 
 function registerPictures() {
   var data = { Identity: [] };
+  var soaData = { corrId: corrId, pictures: [] };
   images.forEach((image) => {
     data.Identity.push( {
       demozone: DEMOZONE,
@@ -118,13 +121,24 @@ function registerPictures() {
       pictureurl: image.file,
       picturetype: image.type
     });
+    soaData.pictures.push( {
+      type: image.type,
+      URL: image.file
+    });
   });
   soaClient.put(UPSERTIDENTITYURI, data, (err, req, res, data) => {
     if (err) {
-      log.error("","Error from SOA call: " + err.statusCode);
+      log.error("","Error from " + UPSERTIDENTITYURI + " SOA call: " + err.statusCode);
       return;
     }
-    log.verbose("Identities set: " + res.statusCode);
+    log.verbose("Identities set to DB: " + res.statusCode);
+    soaClient.put(SOASENDPICTURES, soaData, (err, req, res, data) => {
+      if (err) {
+        log.error("","Error from " + SOASENDPICTURES + " SOA call: " + err.statusCode);
+        return;
+      }
+      log.verbose("Identities set to SOA process: " + res.statusCode);
+    });
   });
 }
 
