@@ -126,15 +126,13 @@ function registerPictures() {
       URL: image.file
     });
   });
-  console.log(data);
-  console.log(soaData);
   soaClient.put(UPSERTIDENTITYURI, data, (err, req, res, data) => {
     if (err) {
       log.error("","Error from " + UPSERTIDENTITYURI + " SOA call: " + err.statusCode);
       return;
     }
     log.verbose("Identities set to DB: " + res.statusCode);
-    soaClient.put(SOASENDPICTURES, soaData, (err, req, res, data) => {
+    soaClient.post(SOASENDPICTURES, soaData, (err, req, res, data) => {
       if (err) {
         log.error("","Error from " + SOASENDPICTURES + " SOA call: " + err.statusCode);
         return;
