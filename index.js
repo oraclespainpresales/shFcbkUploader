@@ -81,11 +81,12 @@ function processFile(prefix, user, files) {
     var oldpath = files.filetoupload.path;
     var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
     var newpath = UPLOADFOLDER + '/'+ newfile;
-    log.verbose("", "Uploaded file %s", newpath);
+    log.verbose("", "Moving file to %s", newpath);
     fs.rename(oldpath, newpath, (err) => {
       if (err) {
         reject(err);
       } else {
+        log.verbose("", "Moved file to %s successfully", newpath);
         resolve(newfile);
       }
     });
@@ -93,13 +94,17 @@ function processFile(prefix, user, files) {
 }
 
 function uploadFile(TEMPLATE, prefix, req, res, callback) {
+  log.verbose("", "Request to upload file...");
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
     var user = fields.user;
     corrId = fields.corrId;
+    log.verbose("", "File to process: %s %s %j", prefix, user, files);
     processFile(prefix, user, files)
     .then((file) => {
-      images.push({ user: user, type: prefix, file: SELF + file});
+      var data = { user: user, type: prefix, file: SELF + file};
+      log.verbose("", "File processed: %j", data);
+      images.push(data);
       res.status(200).send(util.format(TEMPLATE, user, corrId));
       res.end;
       if (callback) callback();
@@ -167,6 +172,7 @@ router.get(UPLOAD, (req, res) => {
   var user = query.user;
   DEMOZONE = query.demozone.toUpperCase();
   images = [];
+  log.verbose("", "New request with data: %j", query);
   res.status(200).send(util.format(HTMLASKSELFIE, user, corrId));
 });
 
