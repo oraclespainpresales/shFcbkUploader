@@ -124,7 +124,7 @@ function registerPictures() {
     data.Identity.push( {
       demozone: DEMOZONE,
       customerid: image.user,
-      pictureurl: encodeURIComponent(image.file),
+      pictureurl: image.file,
       picturetype: image.type
     });
     soaData.pictures.push( {
@@ -172,7 +172,7 @@ router.get(UPLOAD, (req, res) => {
   var query = url_parts.query;
   var corrId = query.corrId;
   var user = query.user;
-  DEMOZONE = query.demozone.toUpperCase();
+  DEMOZONE = query.demozone.toUpperCase().replace(' ', '');
   images = [];
   log.verbose("", "New request with data: %j", query);
   res.status(200).send(util.format(HTMLASKSELFIE, user, corrId));
