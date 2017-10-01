@@ -132,6 +132,7 @@ function registerPictures() {
       URL: image.file
     });
   });
+  console.log(data);
   soaClient.put(UPSERTIDENTITYURI, data, (err, req, res, data) => {
     if (err) {
       log.error("","Error from " + UPSERTIDENTITYURI + " SOA call: " + err.statusCode);
