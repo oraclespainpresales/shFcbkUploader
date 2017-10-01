@@ -124,7 +124,7 @@ function registerPictures() {
     data.Identity.push( {
       demozone: DEMOZONE,
       customerid: image.user,
-      pictureurl: image.file,
+      pictureurl: encodeURIComponent(image.file),
       picturetype: image.type
     });
     soaData.pictures.push( {
