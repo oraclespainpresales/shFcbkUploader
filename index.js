@@ -1,4 +1,4 @@
-ro'use strict';
+'use strict';
 
 // Module imports
 var restify = require('restify')
