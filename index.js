@@ -1,11 +1,11 @@
-'use strict';
+ro'use strict';
 
 // Module imports
 var restify = require('restify')
   , formidable = require('formidable')
   , express = require('express')
   , url = require('url')
-  , fs = require('fs')
+  , fs = require('fs-extra')
   , path = require('path')
   , http = require('http')
   , https = require('https')
@@ -83,7 +83,7 @@ function processFile(prefix, user, files) {
     var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
     var newpath = UPLOADFOLDER + '/'+ newfile;
     log.verbose("", "Moving file to %s", newpath);
-    fs.rename(oldpath, newpath, (err) => {
+    fs.move(oldpath, newpath, (err) => {
       if (err) {
         reject(err);
       } else {
