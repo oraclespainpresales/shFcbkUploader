@@ -86,12 +86,12 @@ function processFile(prefix, corrId, user, files) {
     var oldpath = files.filetoupload.path;
     var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
     var newpath = UPLOADFOLDER + '/'+ newfile;
-    log.verbose("", "Moving file to %s", newpath);
+    log.verbose("", "[%s] Moving file to %s", corrId, newpath);
     fs.move(oldpath, newpath, (err) => {
       if (err) {
         reject(err);
       } else {
-        log.verbose("", "Moved file to %s successfully", newpath);
+        log.verbose("", "[%s] Moved file to %s successfully", corrId, newpath);
         resolve(newfile);
       }
     });
@@ -148,19 +148,19 @@ function registerPictures(corrId) {
       URL: image.file
     });
   });
-  log.verbose("","Data to send to SOA: %s", JSON.stringify(data));
+  log.verbose("","[%s] Data to send to SOA: %s", corrId, JSON.stringify(data));
   soaClient.put(UPSERTIDENTITYURI, data, (err, req, res, data) => {
     if (err) {
       log.error("","Error from " + UPSERTIDENTITYURI + " SOA call: " + err.statusCode);
       return;
     }
-    log.verbose("Identities set to DB: " + res.statusCode);
+    log.verbose("", "[%s] Identities set to DB: %s", corrId, res.statusCode);
     soaClient.post(SOASENDPICTURES, soaData, (err, req, res, data) => {
       if (err) {
-        log.error("","Error from " + SOASENDPICTURES + " SOA call: " + err.statusCode);
+        log.error("","[%s] Error from '%s' SOA call: %s", corrId, SOASENDPICTURES, err.statusCode);
         return;
       }
-      log.verbose("Identities set to SOA process: " + res.statusCode);
+      log.verbose("", "[%s] Identities set to SOA process: %s", corrId, res.statusCode);
       _.remove(sessions, { corrId: corrId });
     });
   });
