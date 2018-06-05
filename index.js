@@ -102,7 +102,7 @@ function uploadFile(TEMPLATE, prefix, req, res, callback) {
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
     var user = fields.user;
-    corrId = fields.corrId;
+    var corrId = fields.corrId;
     log.verbose("", "[%s] Request to upload file '%s'...", corrId, prefix);
     log.verbose("", "[%s] File to process: %s %s %j", corrId, prefix, user, files);
     processFile(prefix, user, files)
