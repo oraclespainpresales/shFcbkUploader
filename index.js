@@ -81,7 +81,7 @@ var sessions = []; // object that will handle multiple requests indexed by the c
 //var corrId = 0;
 var DEMOZONE = '';
 
-function processFile(prefix, user, files) {
+function processFile(prefix, corrId, user, files) {
   return new Promise((resolve, reject) => {
     var oldpath = files.filetoupload.path;
     var newfile = DEMOZONE + '-' + prefix + '-' + user + '-' + corrId + '-' + files.filetoupload.name;
@@ -105,7 +105,7 @@ function uploadFile(TEMPLATE, prefix, req, res, callback) {
     var corrId = fields.corrId;
     log.verbose("", "[%s] Request to upload file '%s'...", corrId, prefix);
     log.verbose("", "[%s] File to process: %s %s %j", corrId, prefix, user, files);
-    processFile(prefix, user, files)
+    processFile(prefix, corrId, user, files)
     .then((file) => {
       var data = { user: user, type: prefix, file: SELF + file};
       log.verbose("", "[%s] File processed: %j", corrId, data);
