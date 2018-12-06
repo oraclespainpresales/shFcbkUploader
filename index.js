@@ -48,7 +48,7 @@ const URI = '/'
     , SELFIEUPLOAD = '/selfieupload'
     , IDUPLOAD = '/IDupload'
     , DELETE = '/images/:demozone'
-    , LOGO = 'https://documents-gse00011668.documents.us2.oraclecloud.com/documents/link/web?IdcService=GET_FILE&dLinkID=LF74603357B68766C445D9DA1589C7A5FB5CB4FE98AE&item=fFileGUID:DD18A696F0F98758F302695F1589C7A5FB5CB4FE98AE';
+    , LOGO = 'http://infra.wedoteam.io:8080/media/WEDO.png';
 ;
 
 const SELFIE = 'SELFIE'
@@ -56,20 +56,20 @@ const SELFIE = 'SELFIE'
 ;
 
 const soaClient = restify.createJSONClient({
-  url: 'http://new.soa.digitalpracticespain.com'
+  url: 'http://soa.wedoteam.io'
 });
 const UPSERTIDENTITYURI = '/SH_APEX_Helper/UpsertIdentityService/customer/identity';
 const SOASENDPICTURES = '/soa-infra/resources/default/BOT_Helper!1.0/PreCheckingProcessService/smarthospitality/prechecking/sendpictures';
 
 const dbClient = restify.createClient({
-  url: 'https://new.apex.digitalpracticespain.com',
+  url: 'https://apex.wedoteam.io',
   rejectUnauthorized: false
 });
 const DELETEIDENTITIESURI = '/ords/pdb1/smarthospitality/customers/identities/';
 
 //const SELF = 'http://new.proxy.digitalpracticespain.com:' + PORT + '/' + IMAGES + '/';
 //const SELF = 'http://fcbkuploader.ngrok.io' + '/' + IMAGES + '/';
-const SELF = 'http://infra.digitalpracticespain.com:8080' + '/' + IMAGES + '/';
+const SELF = 'http://infra.wedoteam.io:8080' + '/' + IMAGES + '/';
 
 
 const HTMLASKSELFIE = '<title>WEDO Hotels</title><meta name="viewport" content="width=device-width"><style>.bootstrap-frm{margin-left:auto; margin-right:auto; max-width: 500px; background: #FFF; padding: 20px 30px 20px 30px; font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif; color: #888; text-shadow: 1px 1px 1px #FFF; border:1px solid #DDD; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;}.bootstrap-frm h1{font: 25px "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 0px 0px 10px 40px; display: block; border-bottom: 1px solid #DADADA; margin: -10px -30px 30px -30px; color: #888;}.bootstrap-frm h1>span{display: block; font-size: 11px;}.bootstrap-frm input[type="file"]{top: 150px; width: 250px; padding: 10px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border: 1px dashed #BBB; text-align: center; background-color: #DDD; cursor:pointer;}}.bootstrap-frm input[type="submit"]{background: #FFF; border: 1px solid #CCC; padding: 10px 25px 10px 25px; color: #333; border-radius: 4px;}.bootstrap-frm .button:hover{color: #333; background-color: #EBEBEB; border-color: #ADADAD;}</style><form action="selfieupload" method="post" enctype="multipart/form-data" class="bootstrap-frm"><h1><center><img src="' + LOGO + '" width="60px"> Hotels</center></h1><h3><center>This a secure connection</center></h3><center><span>Please, upload a Selfie.<br><br></span></center><input type="hidden" value="%s" name="user"/><input type="hidden" value="%s" name="corrId"/><center><input type="file" name="filetoupload" accept="image/*;capture=camera"></center><br><br><center><input type="submit"></center></form>';
