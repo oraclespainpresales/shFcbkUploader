@@ -38,9 +38,16 @@ const IMAGES = 'images'
     , PORT = 7123
 ;
 
+const SSLCERTFOLDER = '/u01/ssl';
+
+const options = {
+  cert: fs.readFileSync(SSLCERTFOLDER + "/certificate.fullchain.crt").toString(),
+  key: fs.readFileSync(SSLCERTFOLDER + "/certificate.key").toString()
+};
+
 const app    = express()
     , router = express.Router()
-    , server = http.createServer(app)
+    , server = https.createServer(options, app)
 ;
 
 const URI = '/'
@@ -205,5 +212,5 @@ app.use(URI, router);
 app.use(URI + IMAGES, express.static(IMAGES));
 
 server.listen(PORT, function() {
-  log.info('', "Web Server running on http://localhost:" + PORT + URI);
+  log.info('', "Web Server running on https://localhost:" + PORT + URI);
 });
